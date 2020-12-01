@@ -1,0 +1,48 @@
+@import "./styles/utils";
+
+.SassComponent {
+  display: flex;
+  background: $oc-gray-2;
+  // 일반 CSS에서는 .SassComponent .box와 같은 것
+  @include media("<768px") {
+    background: $oc-gray-9;
+  }
+  .box {
+    background: red;
+    cursor: pointer;
+    transition: all 0 0.3s ease-in;
+    // .box와 .red 가 동시에 className에 적용된 경우
+    &.red {
+      background: $red;
+      @include square(1);
+    }
+    &.orange {
+      background: $orange;
+      @include square(2);
+    }
+    &.yellow {
+      background: $yellow;
+      @include square(3);
+    }
+    &.green {
+      background: $green;
+      @include square(4);
+    }
+    &.blue {
+      background: $blue;
+      @include square(5);
+    }
+    &.indigo {
+      background: $indigo;
+      @include square(6);
+    }
+    &.violet {
+      background: $violet;
+      @include square(7);
+    }
+    &:hover {
+      //.box에 마우스 hovering 되었을 때
+      background: black;
+    }
+  }
+}
