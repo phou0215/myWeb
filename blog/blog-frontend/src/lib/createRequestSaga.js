@@ -22,9 +22,34 @@ export default function createRequestSaga(type, request) {
     } catch (e) {
       yield put({
         type: FAILURE,
-        payload: e,
+        payload: e.message,
         error: true,
       });
+    }
+    yield put(finishLoading(type)); // 로딩 끝
+  };
+}
+
+export function createLogoutSaga(type, request) {
+  const SUCCESS = `${type}_SUCCESS`;
+  const FAILURE = `${type}_FAILURE`;
+
+  return function* (action) {
+    yield put(startLoading(type)); // 로딩 시작
+    try {
+      const response = yield call(request, action.payload);
+      yield put({
+        type: SUCCESS,
+        payload: response.data,
+      });
+      localStorage.removeItem('user');
+    } catch (e) {
+      yield put({
+        type: FAILURE,
+        payload: e.message,
+        error: true,
+      });
+      localStorage.removeItem('user');
     }
     yield put(finishLoading(type)); // 로딩 끝
   };

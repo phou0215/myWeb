@@ -39,7 +39,7 @@ const UserInfoBlock = styled.div`
   margin-right: 1rem;
 `;
 
-const Header = ({ user }) => {
+const Header = ({ user, onLogout }) => {
   return (
     <Fragment>
       <HeaderBlock>
@@ -50,7 +50,7 @@ const Header = ({ user }) => {
           {user ? (
             <div className="right">
               <UserInfoBlock>{user.user.username}</UserInfoBlock>
-              <Button style={{ width: '100px' }} to="/logout">
+              <Button style={{ width: '100px' }} onClick={onLogout}>
                 로그아웃
               </Button>
             </div>
