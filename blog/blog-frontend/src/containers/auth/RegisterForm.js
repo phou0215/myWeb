@@ -4,28 +4,11 @@ import { changeField, initForm, register } from '../../modules/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import { check } from '../../modules/user';
 import { withRouter } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
-import {toast} from "react-toastify";
+import showToastMessage from '../../lib/toastMessage';
 
 const RegisterForm = ({ history }) => {
   const [error, setError] = useState(null);
 
-  const showToastMessage = (messageText, messageType = "I")=>{
-    toast.dismiss();
-    toast.configure({
-      position: toast.POSITION.BOTTOM_RIGHT,
-      toastId: 1
-    });
-    if (messageType === "S") {
-      toast.success(messageText);
-    }
-    if (messageType === "I") {
-      toast.info(messageText);
-    }
-    if (messageType === "E") {
-      toast.error(messageText);
-    }
-  }
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, userData }) => ({
     form: auth.register,

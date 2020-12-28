@@ -58,7 +58,7 @@ export const write = async (ctx) => {
   try {
     await post.save();
     ctx.response.status = 200;
-    ctx.response.body = responseCode.function_ok;
+    ctx.response.body = Object.assign({},responseCode.function_ok, {user:ctx.state.user});
   } catch (e) {
     ctx.throw(500, e);
   }

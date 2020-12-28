@@ -1,8 +1,19 @@
 import React from 'react';
-import Router from 'react-router-dom';
+import Responsive from "../components/common/Responsive";
+import Editor from "../components/write/Editor";
+import TagBoxContainer from "../containers/write/TagBoxContainer";
+import WirteActionButtons from '../components/write/WriteActionButtons';
+import EditorContainer from "../containers/write/EditorContainer";
+import WriteActionButtonsContainer from '../containers/write/WriteActionButtonsContainer';
 
 const WritePage = () => {
-  return <div>포스트 작성</div>;
+  return (
+    <Responsive>
+      <EditorContainer></EditorContainer>
+      <TagBoxContainer></TagBoxContainer>
+      <WriteActionButtonsContainer></WriteActionButtonsContainer>
+    </Responsive>
+  );
 };
 
 export default WritePage;
