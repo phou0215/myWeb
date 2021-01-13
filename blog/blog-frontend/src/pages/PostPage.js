@@ -1,8 +1,18 @@
-import React from 'react';
-import Router from 'react-router-dom';
+import React ,{Fragment}from 'react';
+import HeaderContainer from "../containers/common/HeaderContainer";
+import PostViewerContainer from "../containers/post/PostViewerContainer";
+import {Helmet} from 'react-helmet-async';
 
 const PostPage = () => {
-  return <div>포스트 읽기</div>;
+  return (
+    <Fragment>
+      <Helmet>
+        <title>POST READ</title>
+      </Helmet>
+      <HeaderContainer></HeaderContainer>
+      <PostViewerContainer></PostViewerContainer>
+    </Fragment>
+  );
 };
 
 export default PostPage;

@@ -10,6 +10,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer, {rootSaga} from './modules';
 import createSagaMiddleware from "redux-saga";
 import {tempUser, check} from './modules/user';
+import {HelmetProvider} from 'react-helmet-async';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
@@ -17,10 +18,11 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaM
 
 function loadUser(){
   try{
-    const user = localStorage.getItem('user');
+    let user = localStorage.getItem('user');
     if(!user){
       return;
     }
+    user = JSON.parse(user);
     store.dispatch(tempUser(user));
     store.dispatch(check());
   }catch(e){
@@ -36,7 +38,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

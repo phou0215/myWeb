@@ -61,9 +61,17 @@ const Editor = ({title, body, onChangeField}) =>{
         });
     },[onChangeField]);
 
+    const mounted = useRef(false);
+    //UPDATE로 넘어온 경우 해당 부분은 한번만 mount 되어야 하기 때문에 추적에 body를 빼도 되지만 권장사항임으로 useRef를 사용하여 변수 mounted를 만들고 해당 값에 따라 useEffect되도록 함
+    useEffect(()=>{
+        if(mounted.current) return;
+        mounted.current = true;
+        quillInstance.current.root.innerHTML = body;
+    },[body]);
     const onChangeTitle = (e) =>{
         onChangeField({key:'title', value:e.target.value});
     };
+
     return(
         <EditorBlock>
             <TitleInput placeholder='제목을 입력하세요' onChange={onChangeTitle} value={title}></TitleInput>

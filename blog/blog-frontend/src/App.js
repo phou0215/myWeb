@@ -8,16 +8,22 @@ import WritePage from './pages/WritePage';
 // import ReactDom from 'react-dom';
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {Helmet} from 'react-helmet-async';
 
 const App = () => {
   return (
     <Fragment>
-      <Route component={PostListPage} path={['/@:username', '/']} exact></Route>
-      <Route component={LoginPage} path="/login"></Route>
-      <Route component={RegisterPage} path="/register"></Route>
-      <Route component={WritePage} path="/write"></Route>
-      <Route component={PostPage} path="/@:username/:postId"></Route>
-      <ToastContainer transition={Slide} />
+      <Helmet>
+        <title>TEST E&amp;C</title>
+      </Helmet>
+      <Fragment>
+        <Route component={PostListPage} path={['/@:username', '/']} exact></Route>
+        <Route component={LoginPage} path="/login"></Route>
+        <Route component={RegisterPage} path="/register"></Route>
+        <Route component={WritePage} path="/write"></Route>
+        <Route component={PostPage} path="/@:username/:postId"></Route>
+        <ToastContainer transition={Slide} />
+      </Fragment>
     </Fragment>
   );
 };

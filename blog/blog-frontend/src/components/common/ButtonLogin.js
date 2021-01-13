@@ -15,8 +15,8 @@ const StyledButton = styled.button`
   padding-bottom:0.45rem;
   width:100%;
   height: 100%;
-  font-size:1.125rem;
-  background:${palette.cyan[5]};
+  font-size:1.0rem;
+  background:${palette.cyan[7]};
   &:hover {
     background: ${palette.cyan[4]};
   }

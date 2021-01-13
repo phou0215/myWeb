@@ -23,6 +23,18 @@ const palette = {
     '#0c8599',
     '#0b7285',
   ],
+  yellow:[
+    '#fff9db',
+    '#fff3bf',
+    '#ffec99',
+    '#ffe066',
+    '#ffd43b',
+    '#fcc419',
+    '#fab005',
+    '#f59f00',
+    '#f08c00',
+    '#e67700',
+  ],  
   orange: [
     '#fff4e6',
     '#ffe8cc',
@@ -71,6 +83,31 @@ const palette = {
     '#2f9e44',
     '#2b8a3e',
   ],
+  lime:[
+    '#f4fce3',
+    '#e9fac8',
+    '#d8f5a2',
+    '#c0eb75',
+    '#a9e34b',
+    '#94d82d',
+    '#82c91e',
+    '#74b816',
+    '#66a80f',
+    '#5c940d',
+  ],
+  Teal:[
+    '#e6fcf5',
+    '#c3fae8',
+    '#96f2d7',
+    '#63e6be',
+    '#38d9a9',
+    '#20c997',
+    '#12b886',
+    '#0ca678',
+    '#099268',
+    '#087f5b',       
+  ],
+
 };
 
 export default palette;

@@ -2,6 +2,25 @@ import Post from '../../models/post';
 import * as responseCode from './post.responseCode';
 import mongoose from 'mongoose';
 import { username_bad } from '../auth/auth.responseCode';
+import sanitizeHtml from 'sanitize-html';
+
+
+const sanitizeOption = {
+  allowedTags:[
+    'h1','h2', 'h3','h4','h5','h6','b','hr','i','u','ul','li','p','s','ol','blockquote','a','img'
+  ],
+  allowedAttributes:{
+    a:['href','name','target'],
+    img:['src'],
+    li:['class'],
+  },
+  allowedSchemes:['data', 'http']
+};
+
+const removeHtmlAndShorten = (body) =>{
+  const filtered = sanitizeHtml(body);
+  return filtered.length < 200 ? (filtered) : (filtered.slice(0,200)+'...')
+}
 
 export const checkObjectId = async (ctx, next) => {
   const { id } = ctx.request.params;
@@ -51,7 +70,7 @@ export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title: title,
-    body: body,
+    body: sanitizeHtml(body,sanitizeOption),
     tags: tags,
     user: ctx.state.user,
   });
@@ -86,7 +105,6 @@ export const list = async (ctx) => {
     if (username) {
       query['user.username'] = username;
     }
-    console.log(query);
     const datas = await Post.find(query)
       .sort({ _id: -1 })
       .limit(10)
@@ -103,8 +121,7 @@ export const list = async (ctx) => {
       size: datas.length,
       datas: datas.map((data) => ({
         ...data,
-        body:
-          data.body.length > 200 ? data.body.slice(0, 200) + '...' : data.body,
+        body:removeHtmlAndShorten(data.body),
       })),
     });
   } catch (e) {
@@ -144,171 +161,20 @@ export const remove = async (ctx) => {
 
 export const update = async (ctx) => {
   const { id } = ctx.request.params;
+  const updateBody = {...ctx.request.body};
+  if(updateBody.body){
+    updateBody.body = sanitizeHtml(updateBody.body);
+  }
   try {
-    await Post.findByIdAndUpdate(id, ctx.request.body, {
+    await Post.findByIdAndUpdate(id, updateBody, {
       new: true,
     }).exec();
     ctx.response.status = 200;
     ctx.response.body = Object.assign({}, responseCode.function_ok, {
-      update_data: { id: id, data: ctx.request.body },
+      update_data: { id: id, data: ctx.response.body },
     });
   } catch (e) {
     ctx.throw(500, e);
   }
 };
 
-// // id의 초기값
-// let postId = 1;
-
-// //posts 배열 초기 데이터
-// const posts = [
-//   {
-//     id: 1,
-//     title: '제목',
-//     body: '내용',
-//   },
-// ];
-
-// /* 포스트 작성
-// POST /api/posts
-// {title,body}
-// */
-// export const write = (ctx) => {
-//   //REST API payload 는 ctx.request.body로 참조 가능함
-//   const { title, body } = ctx.request.body;
-//   if (!title || title === null) {
-//     ctx.status = 400;
-//     ctx.body = title_none;
-//   } else if (!body || body == null) {
-//     ctx.status = 400;
-//     ctx.body = body_none;
-//   } else {
-//     ctx.status = 200;
-//     postId += 1;
-//     posts.push({ id: postId, title: title, body: body });
-//     ctx.body = function_ok;
-//   }
-// };
-// /* 포스트 목록 조회
-// GET /api/posts
-// */
-// export const list = (ctx) => {
-//   const return_data = Object.assign({}, function_ok, { datas: posts });
-//   ctx.status = 200;
-//   ctx.body = return_data;
-// };
-
-// /* 포스트 조회
-// 특정 포스트 조회
-// */
-// export const read = (ctx) => {
-//   const id = ctx.params.id;
-//   if (!id) {
-//     ctx.status = 400;
-//     ctx.body = id_none;
-//     return;
-//   }
-//   const index = posts.findIndex((post) => post.id.toString() === id.toString());
-//   if (index === -1) {
-//     ctx.status = 404;
-//     ctx.body = id_invalid;
-//     return;
-//   }
-//   const return_data = Object.assign({}, function_ok, { data: posts[index] });
-//   ctx.status = 200;
-//   ctx.body = return_data;
-// };
-
-// /* 포스트 삭제
-// 특정 포스트 삭제
-// */
-// export const remove = (ctx) => {
-//   const id = ctx.params.id;
-//   if (!id) {
-//     ctx.status = 400;
-//     ctx.body = id_none;
-//     return;
-//   }
-//   const index = posts.findIndex((post) => post.id.toString() === id);
-//   if (index === -1) {
-//     ctx.status = 404;
-//     ctx.body = id_invalid;
-//     return;
-//   }
-//   posts.splice(index, 1);
-//   ctx.status = 200;
-//   ctx.body = function_ok;
-// };
-
-// /* 포스트 교체
-//  */
-// export const replace = (ctx) => {
-//   //REST API payload 는 ctx.request.body로 참조 가능함
-//   const id = ctx.params.id;
-//   const { title, body } = ctx.request.body;
-//   if (!id) {
-//     ctx.status = 400;
-//     ctx.body = id_none;
-//     return;
-//   }
-//   const index = posts.findIndex((post) => post.id.toString() === id);
-
-//   if (!title || title === null) {
-//     ctx.status = 400;
-//     ctx.body = title_none;
-//   } else if (!body || body === null) {
-//     ctx.status = 400;
-//     ctx.body = body_none;
-//   } else if (!index) {
-//     ctx.status = 400;
-//     ctx.body = id_invalid;
-//   } else {
-//     ctx.status = 200;
-//     posts[index] = { id: id, title: title, body: body };
-//     ctx.body = function_ok;
-//   }
-// };
-
-// /*특정 필드 수정*/
-
-// export const update = (ctx) => {
-//   //REST API payload 는 ctx.request.body로 참조 가능함
-//   const id = ctx.params.id;
-//   const { title, body } = ctx.request.body;
-//   //   const flag_format = parsingCheck(JSON.stringify(ctx.request.body));
-//   // None id
-//   if (!id) {
-//     ctx.status = 400;
-//     ctx.body = id_none;
-//     return;
-//   }
-//   const index = posts.findIndex((post) => post.id.toString() === id);
-
-//   //   if (!flag_format) {
-//   //     ctx.status = 400;
-//   //     ctx.body = payload_format_err;
-//   //   }
-//   if (!title || title === null || !body || body === null) {
-//     ctx.status = 400;
-//     ctx.body = payload_none;
-//     return;
-//   }
-
-//   if (index === -1) {
-//     ctx.status = 400;
-//     ctx.body = id_invalid;
-//   } else {
-//     ctx.status = 200;
-//     posts[index] = { id: id, title: title, body: body };
-//     ctx.body = function_ok;
-//   }
-// };
-
-// function parsingCheck(payload) {
-//   try {
-//     JSON.parse(payload);
-//     return true;
-//   } catch (e) {
-//     return false;
-//   }
-// }

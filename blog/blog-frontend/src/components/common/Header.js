@@ -45,19 +45,19 @@ const Header = ({ user, onLogout }) => {
       <HeaderBlock>
         <WrapperBlock>
           <Link to="/" className="logo">
-            <div className="logo">TEST EnC</div>
+            <div style={{color:palette.blue[8]}}className="logo">TEST EnC</div>
           </Link>
           {user ? (
             <div className="right">
               <UserInfoBlock>{user.user.username}</UserInfoBlock>
               <Button style={{ width: '100px' }} onClick={onLogout}>
-                로그아웃
+                Logout
               </Button>
             </div>
           ) : (
             <div className="right">
               <Button style={{ width: '100px' }} to="/login">
-                로그인
+                Login
               </Button>
             </div>
           )}
